@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.DataMapper">
+    <select id="getDataByKey" resultType="Data">
+        select * from data where `key` = #{key}
+    </select>
+    <select id="getValueIdByKeyAndValue" resultType="Data">
+        select * from data where `key` = #{key} and `value` = #{value}
+    </select>
+    <update id="update">
+        update `data`
+        <set>
+            <if test="key != null">
+                `key` = #{key},
+            </if>
+            <if test="value != null">
+                `value` = #{value},
+            </if>
+            <if test="valueId != null">
+                `value_id` = #{valueId},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+</mapper>

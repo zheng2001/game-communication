@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.BannerMapper">
+    <select id="list" resultType="Banner">
+        select * from `banner` order by `order` desc
+    </select>
+    <insert id="addBanner">
+        insert into `banner`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bannerImg !=null">
+                `banner_img`,
+            </if>
+            <if test="order !=null">
+                `order`,
+            </if>
+            <if test="bannerStatus !=null">
+                `banner_status`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bannerImg !=null">
+                #{bannerImg},
+            </if>
+            <if test="order !=null">
+                #{order},
+            </if>
+            <if test="bannerStatus !=null">
+                #{bannerStatus},
+            </if>
+        </trim>
+    </insert>
+    <delete id="batchDelByIds">
+        delete from `banner` where id in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="bannerIds" resultType="Integer">
+        select `id` from `banner`
+    </select>
+    <update id="formatOrder">
+        <foreach collection="ids" item="id" index="index" open="" close="" separator=";">
+            update `banner`
+            <set>
+                `order`= (#{index}+1)
+            </set>
+            where `id` = #{id}
+        </foreach>
+    </update>
+    <select id="getBannerMaxOrder" resultType="Integer">
+        select max(`order`) as max_order from `banner`
+    </select>
+    <select id="getBannerByGtOrder" resultType="Banner">
+        select * from `banner` where `order` &gt; #{order} order by `order` asc limit 0,1
+    </select>
+    <select id="getBannerByLtOrder" resultType="Banner">
+        select * from `banner` where `order` &lt; #{order} order by `order` desc limit 0,1
+    </select>
+    <select id="getBannerById" resultType="Banner">
+        select * from `banner` where `id` = #{id}
+    </select>
+    <update id="update">
+        update `banner`
+        <set>
+            <if test="bannerImg != null">
+                `banner_img` = #{bannerImg},
+            </if>
+            <if test="order != null">
+                `order` = #{order},
+            </if>
+            <if test="bannerStatus != null">
+                `banner_status` = #{bannerStatus},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from `banner` where id = #{id}
+    </delete>
+
+    <select id="banners" resultType="Banner">
+        select * from `banner` where `banner_status` = 1 order by `order` asc
+    </select>
+</mapper>

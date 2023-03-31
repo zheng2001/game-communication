@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.UserMapper">
+    <select id="getAllUserCount" resultType="java.lang.Integer">
+        select count(*) from `user`
+    </select>
+    <select id="listByCondition" resultType="User">
+        select `id`,`nickname`,`username`,`head_img`,`user_status`,`create_time`,`login_time` from `user`
+        <where>
+            <if test="name != null and name != ''">
+                `username` like concat('%',#{name},'%')
+                or `nickname` like concat('%',#{name},'%')
+            </if>
+            <if test="userStatus != null and userStatus != ''">
+                and `user_status` = #{userStatus}
+            </if>
+        </where>
+        order by `create_time` desc
+    </select>
+    <insert id="addUser">
+        insert into `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickname !=null">
+                `nickname`,
+            </if>
+            <if test="username !=null">
+                `username`,
+            </if>
+            <if test="pwd !=null">
+                `pwd`,
+            </if>
+            <if test="age !=null">
+                `age`,
+            </if>
+            <if test="sex !=null">
+                `sex`,
+            </if>
+            <if test="headImg !=null">
+                `head_img`,
+            </if>
+            <if test="userStatus !=null">
+                `user_status`,
+            </if>
+            <if test="createTime !=null">
+                `create_time`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickname !=null">
+                #{nickname},
+            </if>
+            <if test="username !=null">
+                #{username},
+            </if>
+            <if test="pwd !=null">
+                #{pwd},
+            </if>
+            <if test="age !=null">
+                #{age},
+            </if>
+            <if test="sex !=null">
+                #{sex},
+            </if>
+            <if test="headImg !=null">
+                #{headImg},
+            </if>
+            <if test="userStatus !=null">
+                #{userStatus},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    <select id="checkUsername" resultType="int">
+        select count(*) from `user` where `username` = #{username}
+    </select>
+    <select id="getUserById" resultType="User">
+        select `id`,`nickname`,`username`,`age`,`sex`,`head_img`,`user_status`
+        from `user` where `id` = #{id}
+    </select>
+    <update id="update">
+        update `user`
+        <set>
+            <if test="nickname != null">
+                `nickname` = #{nickname},
+            </if>
+            <if test="pwd != null">
+                `pwd` = #{pwd},
+            </if>
+            <if test="age != null">
+                `age` = #{age},
+            </if>
+            <if test="sex != null">
+                `sex` = #{sex},
+            </if>
+            <if test="headImg != null">
+                `head_img` = #{headImg},
+            </if>
+            <if test="userStatus != null">
+                `user_status` = #{userStatus},
+            </if>
+            <if test="loginTime != null">
+                `login_time` = #{loginTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from `user` where id = #{id}
+    </delete>
+    <select id="login" resultType="User">
+        select * from `user` where `username` = #{username} and `pwd` = #{pwd}
+    </select>
+    <insert id="register">
+        insert into `user`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickname !=null">
+                nickname,
+            </if>
+            <if test="username !=null">
+                username,
+            </if>
+            <if test="pwd !=null">
+                pwd,
+            </if>
+            <if test="age !=null">
+                age,
+            </if>
+            <if test="sex !=null">
+                sex,
+            </if>
+            <if test="headImg !=null">
+                head_img,
+            </if>
+            <if test="userStatus !=null">
+                user_status,
+            </if>
+            <if test="createTime !=null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickname !=null">
+                #{nickname},
+            </if>
+            <if test="username !=null">
+                #{username},
+            </if>
+            <if test="pwd !=null">
+                #{pwd},
+            </if>
+            <if test="age !=null">
+                #{age},
+            </if>
+            <if test="sex !=null">
+                #{sex},
+            </if>
+            <if test="headImg !=null">
+                #{headImg},
+            </if>
+            <if test="userStatus !=null">
+                #{userStatus},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    <update id="modifyPwdById">
+        update `user`
+        <set>
+            <if test="pwd != null">
+                `pwd` = #{pwd},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+
+</mapper>

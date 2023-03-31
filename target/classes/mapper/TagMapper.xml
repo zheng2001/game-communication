@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.TagMapper">
+    <select id="listByCondition" resultType="Tag">
+        select * from `tag`
+        <where>
+            <if test="tagName != null and tagName != ''">
+                `tag_name` like concat('%',#{tagName},'%')
+            </if>
+        </where>
+        order by `order` desc
+    </select>
+    <insert id="addTag">
+        insert into `tag`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tagName !=null">
+                `tag_name`,
+            </if>
+            <if test="order !=null">
+                `order`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tagName !=null">
+                #{tagName},
+            </if>
+            <if test="order !=null">
+                #{order},
+            </if>
+        </trim>
+    </insert>
+    <select id="checkTagName" resultType="int">
+        select count(*) from `tag` where `tag_name` = #{tagName}
+    </select>
+    <select id="checkTagNameWithOutId" resultType="int">
+        select count(*) from `tag` where `tag_name` = #{tagName} and `id` &lt;&gt; #{id}
+    </select>
+    <delete id="batchDelByIds">
+        delete from `tag` where `id` in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+    <select id="tagIds" resultType="Integer">
+        select `id` from `tag`
+    </select>
+    <update id="formatOrder">
+        <foreach collection="ids" item="id" index="index" open="" close="" separator=";">
+            update `tag`
+            <set>
+                `order`= (#{index}+1)
+            </set>
+            where `id` = #{id}
+        </foreach>
+    </update>
+    <select id="getTagMaxOrder" resultType="Integer">
+        select max(`order`) as max_order from `tag`
+    </select>
+    <select id="getTagByGtOrder" resultType="Tag">
+        select * from `tag` where `order` &gt; #{order} order by `order` asc limit 0,1
+    </select>
+    <select id="getTagByLtOrder" resultType="Tag">
+        select * from `tag` where `order` &lt; #{order} order by `order` desc limit 0,1
+    </select>
+    <select id="getTagById" resultType="Tag">
+        select * from `tag` where `id` = #{id}
+    </select>
+    <update id="update">
+        update `tag`
+        <set>
+            <if test="tagName != null">
+                `tag_name` = #{tagName},
+            </if>
+            <if test="order != null">
+                `order` = #{order},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from `tag` where id = #{id}
+    </delete>
+    <select id="getTagsByOrderLtSix" resultType="Tag">
+        select * from `tag` where `order` &lt; 6  order by `order` asc
+    </select>
+    <select id="getTagsByOrderGtFive" resultType="Tag">
+        select * from `tag` where `order` &gt; 5 order by `order` asc
+    </select>
+    <select id="list" resultType="Tag">
+        select * from `tag` order by `order` asc
+    </select>
+</mapper>

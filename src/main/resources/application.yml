@@ -1,0 +1,26 @@
+# 修改端口号
+server:
+  port: 9090
+#配置
+spring:
+  # 上传文件大小
+  servlet:
+    multipart:
+      max-file-size: 500MB # 单个数据大小
+      max-request-size: 1024MB # 总数据大小
+  # 数据库连接
+  datasource:
+    url: "jdbc:mysql://localhost:3306/gc?serverTimezone=Asia/Shanghai&allowMultiQueries=true"
+    username: "root"
+    password: "1234"
+    driver-class-name: com.mysql.cj.jdbc.Driver
+# 配置mybatis
+mybatis:
+  # 标注待解析的mapper的xml文件位置
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.pojo
+  configuration:
+    map-underscore-to-camel-case: true # 开启数据库字段下划线转驼峰
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #开启日志
+
+

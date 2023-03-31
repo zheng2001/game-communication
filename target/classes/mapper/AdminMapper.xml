@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.AdminMapper">
+    <select id="listByCondition" resultType="Admin">
+        select `id`,`username`,`email`,`admin_status`,`create_time`,`login_time` from `admin`
+        <where>
+            <if test="adminStatus != null and adminStatus != ''">
+                `admin_status` = #{adminStatus}
+            </if>
+            <if test="username != null and username != ''">
+                and `username` like concat('%',#{username},'%')
+            </if>
+        </where>
+        order by `create_time` desc
+    </select>
+    <insert id="addAdmin">
+        insert into `admin`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username !=null">
+                `username`,
+            </if>
+            <if test="pwd !=null">
+                `pwd`,
+            </if>
+            <if test="email !=null">
+                `email`,
+            </if>
+            <if test="adminStatus !=null">
+                `admin_status`,
+            </if>
+            <if test="createTime !=null">
+                `create_time`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="username !=null">
+                #{username},
+            </if>
+            <if test="pwd !=null">
+                #{pwd},
+            </if>
+            <if test="email !=null">
+                #{email},
+            </if>
+            <if test="adminStatus !=null">
+                #{adminStatus},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+        </trim>
+    </insert>
+    <select id="checkUsername" resultType="int">
+        select count(*) from `admin` where `username` = #{username}
+    </select>
+    <select id="getAdminById" resultType="Admin">
+        select * from `admin` where `id` = #{id}
+    </select>
+    <update id="update">
+        update `admin`
+        <set>
+            <if test="pwd != null">
+                `pwd` = #{pwd},
+            </if>
+            <if test="email != null">
+                `email` = #{email},
+            </if>
+            <if test="adminStatus != null">
+                `admin_status` = #{adminStatus},
+            </if>
+            <if test="loginTime != null">
+                `login_time` = #{loginTime},
+            </if>
+        </set>
+        where `id` = #{id}
+    </update>
+    <delete id="deleteById">
+        delete from `admin` where id = #{id}
+    </delete>
+    <select id="login" resultType="Admin">
+        select * from `admin` where `username` = #{username} and `pwd` = #{pwd}
+    </select>
+</mapper>

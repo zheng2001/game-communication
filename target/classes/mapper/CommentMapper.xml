@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mapper.CommentMapper">
+    <resultMap id="CommentAndUser" type="Comment">
+        <id property="id" column="id"/>
+        <result property="uid" column="uid"></result>
+        <result property="content" column="content"></result>
+        <result property="createTime" column="create_time"></result>
+        <result property="eid" column="eid"></result>
+        <result property="pid" column="pid"></result>
+        <result property="target" column="target"></result>
+        <association property="user" javaType="User">
+            <result property="nickname" column="nickname"/>
+            <result property="headImg" column="head_img"/>
+        </association>
+    </resultMap>
+
+    <insert id="add">
+        insert into `comment`
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uid !=null">
+                `uid`,
+            </if>
+            <if test="content !=null">
+                `content`,
+            </if>
+            <if test="createTime !=null">
+                `create_time`,
+            </if>
+            <if test="eid !=null">
+                `eid`,
+            </if>
+            <if test="pid !=null">
+                `pid`,
+            </if>
+            <if test="target !=null">
+                `target`,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uid !=null">
+                #{uid},
+            </if>
+            <if test="content !=null">
+                #{content},
+            </if>
+            <if test="createTime !=null">
+                #{createTime},
+            </if>
+            <if test="eid !=null">
+                #{eid},
+            </if>
+            <if test="pid !=null">
+                #{pid},
+            </if>
+            <if test="target !=null">
+                #{target},
+            </if>
+        </trim>
+    </insert>
+    <select id="getCommentsByEid" resultMap="CommentAndUser">
+        select c.`id`,c.`uid`,c.`content`,c.`create_time`,c.`eid`,c.`target`,c.`pid`,u.`nickname`,u.`head_img`
+        from `comment` c ,`user` u
+        where c.`uid` = u.`id`
+        and `eid` = #{eid}
+        order by c.`create_time` desc
+    </select>
+    <delete id="batchDelByIds">
+        delete from `comment` where `eid` in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
